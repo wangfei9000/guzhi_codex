@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "dmApp",
+    "slug": "dmApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "dmapp",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "icon": "./assets/expo.icon",
+      "infoPlist": {
+        "NSCameraUsageDescription": "需要使用相机拍摄勘查照片",
+        "NSPhotoLibraryUsageDescription": "需要访问相册以选择勘查照片"
+      },
+      "bundleIdentifier": "com.duming.dmapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1A56DB",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.duming.dmapp",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "需要访问相册以选择勘查照片",
+          "cameraPermission": "需要使用相机拍摄勘查照片"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#1A56DB",
+          "android": {
+            "image": "./assets/images/splash-icon.png",
+            "imageWidth": 76
+          }
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8121eab3-37a5-40ae-88fb-3cb0e44f927e"
+      }
+    }
+  }
+}
