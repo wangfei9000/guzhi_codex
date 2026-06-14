@@ -1,0 +1,8 @@
+backend/target
+frontend/node_modules
+frontend/dist
+image/
+dmApp/android
+dmApp/ios
+dmApp/node_modules
+dmApp/scripts
