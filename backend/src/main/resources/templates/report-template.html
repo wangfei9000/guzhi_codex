@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <title>${reportTitle!'房地产抵押估价报告'}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            margin-top: 78px;
+            margin-bottom: 58px;
+
+            @top-center {
+                content: element(reportHeader);
+            }
+
+            @bottom-center {
+                border-top: 1px solid #333;
+                padding-top: 5px;
+                color: #333;
+                font-family: "Arial Unicode MS", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
+                font-size: 10px;
+                line-height: 14px;
+                content: "地址：${orgAddress!'浙江省杭州市上城区四季青街道钱塘航空大厦2幢1510室'} 电话：${orgPhone!'0571-88060768'} 电子邮箱：${orgEmail!'124400690@qq.com'}    第 " counter(page) " 页 / 共 " counter(pages) " 页";
+            }
+        }
+
+        html, body, div, span, h1, h2, h3, h4, p, em, strong, table, tbody, thead, tr, th, td, ul, li {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            font-family: "Arial Unicode MS", "SimSun", "Microsoft YaHei", "PingFang SC", sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fff;
+            color: #222;
+            font-size: 14px;
+            line-height: 1.85;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            position: running(reportHeader);
+            width: 100%;
+            border-bottom: 1px solid #333;
+            padding: 3px 0;
+            color: #333;
+            font-size: 12px;
+            line-height: 18px;
+        }
+
+        .header em {
+            float: right;
+            font-style: normal;
+        }
+
+        .template {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .template-wrap {
+            width: 170mm;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            background: #fff;
+        }
+
+        .page {
+            page-break-after: always;
+            min-height: 900px;
+            padding: 8px 10px;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        .section {
+            page-break-before: always;
+            padding: 8px 10px;
+        }
+
+        h1 {
+            font-size: 26px;
+            line-height: 42px;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 0;
+        }
+
+        h2 {
+            font-size: 20px;
+            line-height: 34px;
+            text-align: center;
+            font-weight: bold;
+            margin: 14px 0 18px;
+        }
+
+        h3 {
+            font-size: 16px;
+            line-height: 30px;
+            font-weight: bold;
+            margin: 14px 0 6px;
+        }
+
+        h4 {
+            font-size: 14px;
+            line-height: 28px;
+            font-weight: bold;
+            margin: 8px 0 4px;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 26px;
+            text-align: justify;
+            margin: 0 0 4px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .indent {
+            text-indent: 2em;
+        }
+
+        .cover-title {
+            padding-top: 138px;
+            margin-bottom: 70px;
+        }
+
+        .cover-fields {
+            width: 154mm;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cover-row {
+            display: table;
+            width: 100%;
+            margin-bottom: 17px;
+            font-size: 15px;
+            line-height: 30px;
+        }
+
+        .cover-label {
+            display: table-cell;
+            width: 138px;
+            font-weight: bold;
+            white-space: nowrap;
+            vertical-align: top;
+        }
+
+        .cover-value {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        .letter p,
+        .content p {
+            line-height: 26px;
+        }
+
+        .toc {
+            width: 160mm;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 20px;
+        }
+
+        .toc li {
+            list-style: none;
+            display: table;
+            width: 100%;
+            line-height: 30px;
+            font-size: 14px;
+        }
+
+        .toc .toc-title {
+            display: table-cell;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .toc .toc-title span:after {
+            content: " ................................................................................................................";
+        }
+
+        .toc .toc-page {
+            display: table-cell;
+            width: 36px;
+            text-align: right;
+        }
+
+        .toc .level-2 .toc-title {
+            padding-left: 26px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 7px 0 12px;
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        th, td {
+            border: 1px solid #bfbfbf;
+            padding: 5px 6px;
+            color: #222;
+            font-size: 12px;
+            line-height: 20px;
+            text-align: center;
+            vertical-align: middle;
+            word-break: break-all;
+        }
+
+        th {
+            font-weight: bold;
+            background: #f5f5f5;
+        }
+
+        .table-title td {
+            font-size: 13px;
+            font-weight: bold;
+            background: #f5f5f5;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        .narrow td,
+        .narrow th {
+            padding: 3px 5px;
+            line-height: 18px;
+        }
+
+        .signature {
+            margin-top: 22px;
+            text-align: right;
+            line-height: 32px;
+        }
+
+        .signature p {
+            text-align: right;
+            line-height: 32px;
+        }
+
+        .note {
+            font-size: 12px;
+            line-height: 20px;
+        }
+
+        .image-placeholder {
+            width: 160mm;
+            max-width: 100%;
+            min-height: 290px;
+            margin: 18px auto;
+            text-align: center;
+            border: 1px solid #d6d6d6;
+        }
+
+        .image-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .appendix-image {
+            max-width: 165mm;
+            max-height: 820px;
+            display: block;
+            margin: 16px auto;
+        }
+
+        .keep-together {
+            page-break-inside: avoid;
+        }
+
+        .small {
+            font-size: 12px;
+        }
+
+        .formula {
+            text-align: center;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="header">
+    <span>${valuationOrg!'浙江德衡房地产土地资产评估有限公司'} 房地产抵押估价报告</span>
+    <em>${orgPhone!'0571-88060768'}</em>
+</div>
+
+<div class="template">
+    <div class="template-wrap">
+        <div class="page">
+            <div class="cover-title">
+                <h1>${reportTitle!'房 地 产 抵 押 估 价 报 告'}</h1>
+                <img src="http://121.40.244.102:8080/uploads/2026/06/06/4c510c7afa2946a1a6d4ca7f154f4874.png" style="width: 100px;margin: 0 auto;display: block;margin-top: 20px;" />
+            </div>
+            <div class="cover-fields">
+                <div class="cover-row">
+                    <div class="cover-label">估价项目：</div>
+                    <div class="cover-value">${projectName!}</div>
+                </div>
+                <div class="cover-row">
+                    <div class="cover-label">委 托 人：</div>
+                    <div class="cover-value">${clientName!'北京银行股份有限公司杭州分行'}</div>
+                </div>
+                <div class="cover-row">
+                    <div class="cover-label">估价机构：</div>
+                    <div class="cover-value">${valuationOrg!'浙江德衡房地产土地资产评估有限公司'}</div>
+                </div>
+                <div class="cover-row">
+                    <div class="cover-label">估价人员：</div>
+                    <div class="cover-value">
+                        注册房地产估价师：${valuer1Name1!'韩松'}（注册号 ${valuer1CertNo1!'6120050037'}）<br/>
+                        注册房地产估价师：${valuer2Name1!'王义贵'}（注册号 ${valuer2CertNo1!'3320180164'}）
+                    </div>
+                </div>
+                <div class="cover-row">
+                    <div class="cover-label">估价报告出具日期：</div>
+                    <div class="cover-value">${issueDateCn!}</div>
+                </div>
+                <div class="cover-row">
+                    <div class="cover-label">估价报告编号：</div>
+                    <div class="cover-value">${reportNo!'XS0001'}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page letter">
+            <h2>致估价委托人函</h2>
+            <p><span class="bold">1.致函对象：</span>${clientName!'北京银行股份有限公司杭州分行'}</p>
+            <p><span class="bold">2.估价目的：</span>${valuationPurpose!'为确定房地产抵押贷款额度提供参考依据而评估房地产抵押价值。'}</p>
+            <p><span class="bold">3.估价对象：</span>本次估价对象坐落于${propertyAddress!}，房地产权利人为${ownerName!}。</p>
+
+            <table class="narrow">
+                <tbody>
+                <tr class="table-title"><td colspan="4">押品概况表</td></tr>
+                <tr>
+                    <th width="18%">资产类型</th>
+                    <td width="27%">${assetType!'房地产类（居住用房）'}</td>
+                    <th width="20%">房屋所有权证书号</th>
+                    <td>${propertyCertificateNo!}</td>
+                </tr>
+                <tr>
+                    <th>权利人</th>
+                    <td>${ownerName!}</td>
+                    <th>坐落</th>
+                    <td>${propertyAddress!}</td>
+                </tr>
+                <tr>
+                    <th>用途</th>
+                    <td>${registeredUse!}</td>
+                    <th>实际用途</th>
+                    <td>${actualUse!'住宅'}</td>
+                </tr>
+                <tr>
+                    <th>建筑面积（㎡）</th>
+                    <td>${buildingArea!}</td>
+                    <th>土地使用权面积（㎡）</th>
+                    <td>${landUseRightArea!}</td>
+                </tr>
+                <tr>
+                    <th>权利性质</th>
+                    <td>${rightNature!}</td>
+                    <th>土地终止日期</th>
+                    <td>${landEndDate!}</td>
+                </tr>
+                <tr>
+                    <th>装修情况</th>
+                    <td>${decoration!}</td>
+                    <th>房屋结构</th>
+                    <td>${buildingStructure!}</td>
+                </tr>
+                <tr>
+                    <th>楼层</th>
+                    <td>${floorName!}/${totalFloor!}</td>
+                    <th>共有情况</th>
+                    <td>${coOwnership!}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="narrow">
+                <tbody>
+                <tr class="table-title"><td colspan="5">估价对象国有土地使用权证书概况表</td></tr>
+                <tr>
+                    <th width="19%">土地使用权人</th>
+                    <td colspan="4">${landUseRightOwner!}</td>
+                </tr>
+                <tr>
+                    <th>坐落</th>
+                    <td colspan="4">${propertyAddress!}</td>
+                </tr>
+                <tr>
+                    <th>国有土地使用权证书号</th>
+                    <th>使用权面积（㎡）</th>
+                    <th>实际用途</th>
+                    <th>权利性质</th>
+                    <th>终止日期</th>
+                </tr>
+                <tr>
+                    <td>${landCertificateNo!}</td>
+                    <td>${landUseRightArea!}</td>
+                    <td>${landActualUse!}</td>
+                    <td>${landRightNature!}</td>
+                    <td>${landEndDate!}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p><span class="bold">4.价值时点：</span>${valueDateCn!}</p>
+            <p><span class="bold">5.价值类型：</span>${valueType!'抵押价值'}，是估价对象假定未设立法定优先受偿权下的价值减去注册房地产估价师知悉的法定优先受偿款后的价值。</p>
+            <p><span class="bold">6.估价方法：</span>${valuationMethod!'比较法'}。</p>
+            <p><span class="bold">7.估价报告应用有效期：</span>自报告出具之日起壹年。即自${validStartDate!}起至${validEndDate!}止。</p>
+            <p><span class="bold">8.估价结果：</span>估价人员在认真分析所掌握的资料后，根据估价对象房地产特征及实际使用情况，依据《房地产估价规范》和《房地产抵押估价指导意见》，本着客观、独立、公正、谨慎的原则，采用科学合理的评估方法，经周密、细致的分析测算，在满足全部假设及限制条件下的估价结果：</p>
+            <p class="indent">据估价人员调查和测算，截止价值时点（${valueDate!}）的抵押价值为人民币${referenceTotalPrice!}万元，大写人民币${capitalamount!}。详见下表：</p>
+
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th>坐落</th>
+                    <th width="80">用途</th>
+                    <th width="88">建筑面积<br/>（㎡）</th>
+                    <th width="88">单价<br/>（元/㎡）</th>
+                    <th width="88">总价<br/>（万元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>${propertyAddress!}</td>
+                    <td>${actualUse!'住宅'}</td>
+                    <td>${buildingArea!}</td>
+                    <td>${referenceUnitPrice!}</td>
+                    <td>${referenceTotalPrice!}</td>
+                </tr>
+                <tr>
+                    <td>合计</td>
+                    <td>-</td>
+                    <td>${buildingArea!}</td>
+                    <td>-</td>
+                    <td>${referenceTotalPrice!}</td>
+                </tr>
+                </tbody>
+            </table>
+            <p>特此函告！</p>
+            <div class="signature">
+                <p>${valuationOrg!'浙江德衡房地产土地资产评估有限公司'}</p>
+                <p>${issueDateCn!}</p>
+            </div>
+        </div>
+
+        <div class="page">
+            <h2>目 录</h2>
+            <ul class="toc">
+                <li><span class="toc-title"><span>第一部分 注册房地产估价师声明</span></span><span class="toc-page">1</span></li>
+                <li><span class="toc-title"><span>第二部分 估价假设和限制条件</span></span><span class="toc-page">2</span></li>
+                <li><span class="toc-title"><span>第三部分 房地产估价结果报告</span></span><span class="toc-page">6</span></li>
+                <li class="level-2"><span class="toc-title"><span>一、估价委托人</span></span><span class="toc-page">6</span></li>
+                <li class="level-2"><span class="toc-title"><span>二、房地产估价机构</span></span><span class="toc-page">6</span></li>
+                <li class="level-2"><span class="toc-title"><span>三、估价目的</span></span><span class="toc-page">6</span></li>
+                <li class="level-2"><span class="toc-title"><span>四、估价对象</span></span><span class="toc-page">6</span></li>
+                <li class="level-2"><span class="toc-title"><span>五、价值时点</span></span><span class="toc-page">8</span></li>
+                <li class="level-2"><span class="toc-title"><span>六、价值类型</span></span><span class="toc-page">9</span></li>
+                <li class="level-2"><span class="toc-title"><span>七、估价原则</span></span><span class="toc-page">9</span></li>
+                <li class="level-2"><span class="toc-title"><span>八、估价依据</span></span><span class="toc-page">11</span></li>
+                <li class="level-2"><span class="toc-title"><span>九、估价方法</span></span><span class="toc-page">13</span></li>
+                <li class="level-2"><span class="toc-title"><span>十、估价结果</span></span><span class="toc-page">14</span></li>
+                <li class="level-2"><span class="toc-title"><span>十一、注册房地产估价师</span></span><span class="toc-page">14</span></li>
+                <li class="level-2"><span class="toc-title"><span>十二、实地查勘期</span></span><span class="toc-page">15</span></li>
+                <li class="level-2"><span class="toc-title"><span>十三、估价作业日期</span></span><span class="toc-page">15</span></li>
+                <li class="level-2"><span class="toc-title"><span>十四、抵押风险分析及报告使用提示</span></span><span class="toc-page">15</span></li>
+                <li class="level-2"><span class="toc-title"><span>十五、房地产评估结果摘要</span></span><span class="toc-page">17</span></li>
+                <li><span class="toc-title"><span>第四部分 房地产变现能力分析</span></span><span class="toc-page">18</span></li>
+                <li><span class="toc-title"><span>第五部分 附件</span></span><span class="toc-page">20</span></li>
+                <li><span class="toc-title"><span>第六部分 房地产估价技术报告</span></span><span class="toc-page">35</span></li>
+            </ul>
+        </div>
+
+        <div class="section content">
+            <h2>第一部分 注册房地产估价师声明</h2>
+            <p class="indent">我们根据自己的良好知识和职业道德，在此郑重声明：</p>
+            <p class="indent">1、注册房地产估价师在估价报告中对事实的说明是真实的和准确的，没有虚假记载、误导性陈述和重大遗漏。</p>
+            <p class="indent">2、估价报告中的分析、意见和结论是注册房地产估价师独立、客观、公正的专业分析、意见和结论，但受到估价报告中已说明的估价假设和限制条件的限制。</p>
+            <p class="indent">3、注册房地产估价师与估价报告中的估价对象没有现实和潜在的利益，与估价委托人及估价利害关系人没有利害关系，也对估价对象、估价委托人及估价利害关系人没有偏见。</p>
+            <p class="indent">4、注册房地产估价师是依照中华人民共和国国家标准《房地产估价规范》和《房地产估价基本术语标准》进行估价工作，并分析测算，形成意见和结论，撰写估价报告。</p>
+            <p class="indent">5、我们已于${siteInspectionDateCn!}对本估价报告中的估价对象的建筑结构、室内外状况进行了实地查勘，并拍摄了估价对象的外观、内部状况和周围环境、景观照片，参加实地查勘人员有：${siteInspectorNames!}。</p>
+            <p class="indent">6、我们对估价委托人提供的相关权属资料无专业上的能力鉴别真伪，其真实性与可靠性由估价委托人负责。如因估价委托人提供的资料失实或因忽视本报告揭示的相关事实所引起的相关法律责任，本估价机构及人员不承担相应责任。</p>
+            <p class="indent">7、没有人对本估价报告提供重要专业帮助。</p>
+            <h3>参加本次估价的注册房地产估价师签名、盖章</h3>
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th>注册房地产估价师</th>
+                    <th>注册证号</th>
+                    <th>签名（盖章）</th>
+                    <th>签章日期</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>${valuer1Name!}</td>
+                    <td>${valuer1CertNo!}</td>
+                    <td></td>
+                    <td>${issueDate!}</td>
+                </tr>
+                <tr>
+                    <td>${valuer2Name!}</td>
+                    <td>${valuer2CertNo!}</td>
+                    <td></td>
+                    <td>${issueDate!}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section content">
+            <h2>第二部分 估价假设和限制条件</h2>
+            <h3>一、估价假设</h3>
+            <h4>（一）一般性假设</h4>
+            <p class="indent">1、本次估价采用了估价委托人提供的《房屋所有权证书》、《国有土地使用权证》等复印件资料，估价人员对估价委托人提供的资料上记载的权属、面积、用途等资料进行了审慎检查，其真实合法权利状况应以房地产（土地）权属管理部门档案记载为准。注册房地产估价师无理由怀疑其合法性、真实性、准确性和完整性，本次报告书不对因该资料全部或部分内容产生的或因依赖该资料测算的评估结果而引致的失误承担责任。</p>
+            <p class="indent">2、估价对象在价值时点的房地产市场为公开、平等、自愿的交易市场，它依据以下假设条件：</p>
+            <p class="indent">（1）存在自愿销售的卖者和自愿购买的买者；</p>
+            <p class="indent">（2）买卖双方的交易行为都是精明和谨慎的；</p>
+            <p class="indent">（3）估价对象能够自由合法地在市场上进行交易处置；</p>
+            <p class="indent">（4）为使交易完成以及达成合理成交价格，需有一个合理的谈判周期，在这个周期内，市场状况、物理状态等是相对静止不变的；</p>
+            <p class="indent">（5）不考虑特殊买者的附加出价。</p>
+            <p class="indent">3、在本次价值时点，估价人员经实地查勘估价对象为正常使用的房屋，未见房屋有重大质量缺陷和安全隐患，也未见受明显环境污染，因此假定估价对象无质量和结构缺陷、能独立持续使用、独立变现并能合法享有及分摊整体房地产的各项权益和服务配套设施。</p>
+            <p class="indent">4、因估价委托人未提供《房屋所有权证书》、《国有土地使用权证》原件，经估价委托人要求，本次评估不考虑估价对象法定优先受偿权利，假设于价值时点时无抵押情况或原有的抵押情况已注销、未有担保等他项权利。估价结果为估价对象完整权利状况下的市场价值。</p>
+            <p class="indent">5、在报告有效期内，如果房地产的作价标准发生重大变化及其它不利因素的发生并对估价对象房地产价值产生明显影响时，应重新进行估价。</p>
+            <h4>（二）未定事项假设</h4>
+            <p class="indent">因估价委托人未提供《房屋所有权证书》、《国有土地使用权证》原件等资料，本次估价对象的房屋用途、房屋建筑结构及建筑面积等资料依据估价委托人提供的相关复印件资料及现场人员进行实地勘察并经估价委托人确定为准。</p>
+            <h4>（三）背离事实假设</h4>
+            <p class="indent">1、本报告估价结果是基于估价对象现时状况于价值时点现时房地产市场状况下形成的客观合理价格。未考虑国家宏观经济政策发生变化、市场供应关系变化、市场结构转变、遇有自然力和其他不可抗力等因素对房地产价值的影响。</p>
+            <p class="indent">2、估价结果未考虑估价对象及其所有权人已承担的债务、或有债务及经营决策失误或市场运作失当对其价值的影响。</p>
+            <h4>（四）不相一致假设</h4>
+            <p class="indent">本估价项目中假设不存在估价对象的实际用途、房屋登记用途、土地登记用途等用途之间不一致，或房屋权属证明、土地权属证明等资料的权利人之间不一致，估价对象的名称不一致等情况，故报告未进行不相一致假设。</p>
+            <h4>（五）依据不足假设</h4>
+            <p class="indent">依据不足假设是在估价委托人无法提供所必需的反映估价对象状况的资料以及注册房地产估价师进行了尽职调查仍然难以取得该资料的情况下，对缺少该资料及对相应的估价对象状况的合理假定。我们尽职进行了搜集调查与本次估价相关的资料。无其他依据不足假设。</p>
+            <h3>二、估价报告使用的限制条件</h3>
+            <p class="indent">1、本次评估报告仅适用于本估价报告所列明的估价目的，完整使用才能有效，如果用于其他估价目的、引用其中的部分数据引起不当后果，本公司概不负责。</p>
+            <p class="indent">2、本报告必须经估价机构加盖公章、注册房地产估价师签字后方可使用，估价机构仅对本报告的原件承担责任，对估价报告的全部或部分复印件概不认可且不承担任何相关责任。</p>
+            <p class="indent">3、本估价报告不作为估价对象权属、面积、用途等情况确认的依据。</p>
+            <p class="indent">4、本报告对估价对象价格的把握，仅相对于价值时点的假设条件、市场状况而言，并未考虑价格波动、税率变化、国家经济政策发生变化以及其他不可抗力等因素对估价对象价值的影响。</p>
+            <p class="indent">5、使用者应当充分考虑估价对象状况和房地产市场状况因时间变化对房地产价值可能产生的影响；应当定期或者在房地产价格变化较快时对房地产价值进行再评估。</p>
+            <p class="indent">6、估价人员只对估价对象进行一般性的实地查勘，现场查勘仅限于其外观和使用状况，对被遮盖、未暴露及难以接触到的部分，依据估价委托人提供的资料进行评估。</p>
+            <p class="indent">7、本估价报告运用的有效期自出具报告之日起一年止（即自${validStartDate!}起至${validEndDate!}），当市场变化较大、国家政策有重大调整以及不可抗力等状况出现时，报告有效期不超过六个月。</p>
+            <p class="indent">8、本报告由${valuationOrg!'浙江德衡房地产土地资产评估有限公司'}负责解释。</p>
+            <h3>三、需要特别说明的其他事项</h3>
+            <p class="indent">1、本估价报告若出现文字或数字因打印、校对及其他原因发生误差时，请估价委托人通知本估价机构更正，否则误差部分无效。</p>
+            <p class="indent">2、估价结果是估价人员模拟市场形成价格的机制和过程，将估价对象客观存在的价格或价值揭示、显现出来。估价结果是一种专业意见，而不应当被认为是对估价对象可实现价格的保证。</p>
+            <p class="indent">3、本次评估报告所确定的房地产价值是在本次评估特定目的及限制条件下的公开市场价格，未考虑强制处分、快速变现、处置费用等因素的影响。</p>
+            <p class="indent">4、本估价报告未经估价机构书面同意，不得向估价委托人和评估报告审核部门之外的单位或个人提供，报告的全部或部分内容，未经许可不得发表于任何公开媒体上。</p>
+            <p class="indent">5、评估原值为含税价格，评估净值为不含税价格，具体税值以当地税务机关审核数据为准。</p>
+            <p class="indent">${specialNotes!}</p>
+        </div>
+
+        <div class="section content">
+            <h2>第三部分 房地产估价结果报告</h2>
+            <h3>一、估价委托人</h3>
+            <p class="indent">1、名称：${clientName!'北京银行股份有限公司杭州分行'}</p>
+            <h3>二、房地产估价机构</h3>
+            <p class="indent">1、机构名称：${valuationOrg!'浙江德衡房地产土地资产评估有限公司'}</p>
+            <p class="indent">2、法定代表人：${legalRepresentative!}</p>
+            <p class="indent">3、住所：${orgAddress!'浙江省杭州市上城区四季青街道钱塘航空大厦2幢1510室'}</p>
+            <p class="indent">4、统一社会信用代码：${unifiedSocialCreditCode!}</p>
+            <p class="indent">5、组织形式：${organizationForm!'有限责任公司（自然人投资或控股）'}</p>
+            <p class="indent">6、首次备案日期：${firstRecordDate!}</p>
+            <p class="indent">7、备案等级：${recordLevel!'一级'}</p>
+            <p class="indent">8、证书编号：${recordCertificateNo!}</p>
+            <p class="indent">9、备案证书有效期限：${recordCertificateValidPeriod!}</p>
+            <p class="indent">10、联系人：${contactName!}</p>
+            <p class="indent">11、联系电话：${orgPhone!'0571-88060768'}</p>
+            <h3>三、估价目的</h3>
+            <p class="indent">${valuationPurpose!'为确定房地产抵押贷款额度提供参考依据而评估房地产抵押价值。'}</p>
+            <h3>四、估价对象</h3>
+            <h4>1.估价对象范围</h4>
+            <p class="indent">估价对象为${ownerName!}所有位于${propertyAddress!}的房地产，房屋建筑面积为${buildingArea!}㎡，土地使用权面积为${landUseRightArea!}㎡，估价范围包含房屋建筑物及其所占用的国有土地使用权、室内不可移动的房屋装饰装修及房地产相关的房屋配套设施设备，不包含室内动产、债权债务、特许经营权等其他财产。</p>
+            <h4>2.估价对象权属状况</h4>
+            <p class="indent">估价对象房屋及土地登记状况详见下表：</p>
+
+            <table class="narrow">
+                <tbody>
+                <tr class="table-title"><td colspan="4">押品概况表</td></tr>
+                <tr>
+                    <th width="18%">资产类型</th>
+                    <td width="27%">${assetType!'房地产类（居住用房）'}</td>
+                    <th width="20%">房屋所有权证书号</th>
+                    <td>${propertyCertificateNo!}</td>
+                </tr>
+                <tr>
+                    <th>权利人</th>
+                    <td>${ownerName!}</td>
+                    <th>坐落</th>
+                    <td>${propertyAddress!}</td>
+                </tr>
+                <tr>
+                    <th>用途</th>
+                    <td>${registeredUse!}</td>
+                    <th>实际用途</th>
+                    <td>${actualUse!'住宅'}</td>
+                </tr>
+                <tr>
+                    <th>建筑面积（㎡）</th>
+                    <td>${buildingArea!}</td>
+                    <th>土地使用权面积（㎡）</th>
+                    <td>${landUseRightArea!}</td>
+                </tr>
+                <tr>
+                    <th>权利性质</th>
+                    <td>${rightNature!}</td>
+                    <th>土地终止日期</th>
+                    <td>${landEndDate!}</td>
+                </tr>
+                <tr>
+                    <th>装修情况</th>
+                    <td>${decoration!}</td>
+                    <th>房屋结构</th>
+                    <td>${buildingStructure!}</td>
+                </tr>
+                <tr>
+                    <th>楼层</th>
+                    <td>${floorName!}/${totalFloor!}</td>
+                    <th>共有情况</th>
+                    <td>${coOwnership!}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="narrow">
+                <tbody>
+                <tr class="table-title"><td colspan="5">估价对象国有土地使用权证书概况表</td></tr>
+                <tr>
+                    <th width="19%">土地使用权人</th>
+                    <td colspan="4">${landUseRightOwner!}</td>
+                </tr>
+                <tr>
+                    <th>坐落</th>
+                    <td colspan="4">${propertyAddress!}</td>
+                </tr>
+                <tr>
+                    <th>国有土地使用权证书号</th>
+                    <th>使用权面积（㎡）</th>
+                    <th>实际用途</th>
+                    <th>权利性质</th>
+                    <th>终止日期</th>
+                </tr>
+                <tr>
+                    <td>${landCertificateNo!}</td>
+                    <td>${landUseRightArea!}</td>
+                    <td>${landActualUse!}</td>
+                    <td>${landRightNature!}</td>
+                    <td>${landEndDate!}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h4>3.估价对象实体状况</h4>
+            <p class="indent">（1）土地实物状况</p>
+            <p class="indent">①土地使用权面积：土地使用权面积为${landUseRightArea!}平方米。</p>
+            <p class="indent">②所在宗地形状：${parcelShape!'形状较规则，便于建筑物布置。'}</p>
+            <p class="indent">③地形、地貌：${terrain!'地势平坦，无明显的坡度。'}</p>
+            <p class="indent">④地势：${landLevel!'该宗地与相邻土地、道路基本齐平。'}</p>
+            <p class="indent">⑤土壤：${soilCondition!'该宗地为城镇住宅用地，没有迹象表明土壤受过影响。'}</p>
+            <p class="indent">⑥土地开发程度：${landDevelopmentLevel!'到价值时点，该宗地红线外基础设施达到“六通”（即通路、供电、供水、排水、通讯、通气）。'}</p>
+            <p class="indent">⑦景观：${landscape!'建筑物间距适中，景观质量较好。'}</p>
+            <p class="indent">⑧周边环境：${surroundingEnvironment!}</p>
+            <p class="indent">（2）建筑物实物状况</p>
+            <p class="indent">①建筑规模：${propertyAddress!}，房屋建筑面积为${buildingArea!}㎡，土地使用权面积为${landUseRightArea!}㎡，估价对象房屋总楼层为${totalFloor!}层，所在层为第${floorName!}层。目前为${occupancyStatus!'自住'}。</p>
+            <p class="indent">②建成年代：估价对象约建成于${builtYear!}年。</p>
+            <p class="indent">③建筑结构：${buildingStructure!}结构。</p>
+            <p class="indent">④建筑用途：${actualUse!'住宅'}用途。</p>
+            <p class="indent">⑤设施设备：${facilitiesCondition!'估价对象设备齐全，总体维护较好。'}</p>
+            <p class="indent">⑥空间布局：${spaceLayout!'阳台、厨房、卧室、卫生间。'}</p>
+            <p class="indent">⑦装饰装修：${decorationDescription!'建筑物为现代风格，外观一般。至价值时点，估价对象整体装修良好，房屋通风、采光较好。'}</p>
+            <p class="indent">⑧室内层高：${indoorHeight!'标准层高'}。</p>
+            <p class="indent">⑨朝向：${orientation!}朝向。</p>
+            <p class="indent">⑩维护养护情况及完损程度：${maintenanceCondition!'现场勘察时没有发现不均匀沉降，建筑物结构构件较好，装修和设备较好、齐全完整，管道畅通，地面、墙面、门窗保养维护正常。房屋属于完好房。'}</p>
+            <h4>4、他项权利状况</h4>
+            <p class="indent">${otherRightsStatus!'从估价人员知悉的情况看，截止估价基准日，根据估价委托人要求，评估结果不考虑抵押、担保等他项权利，为估价对象于价值时点完全产权房地产市场价格。'}</p>
+
+            <h3>五、价值时点</h3>
+            <p class="indent">以估价委托人确定的价值时点，即${valueDateCn!}（估价对象实地查勘之日）为价值时点。</p>
+            <p class="indent">由于本次房地产估价类型为房地产抵押价值评估，根据《房地产抵押估价指导意见》第十条规定，抵押房地产的价值时点，原则上为完成估价对象实地查勘之日。估价实地查勘之日为${siteInspectionDate!}，故确定本次估价的价值时点为${valueDate!}。</p>
+            <h3>六、价值类型</h3>
+            <p class="indent">1、价值类型：${valueType!'抵押价值'}。</p>
+            <p class="indent">2、价值内涵：房地产抵押价值等于假定未设立法定优先受偿权利下的市场价值减去房地产估价师知悉的法定优先受偿款。</p>
+            <p class="indent">市场价值是估价对象经适当营销后，由熟悉情况、谨慎行事且不受强迫的交易双方，以公平交易方式在价值时点自愿进行交易的金额。</p>
+            <p class="indent">法定优先受偿款是指假定在价值时点实现抵押权时，法律规定优先于本次抵押贷款受偿的款额，包括发包人拖欠承包人的建筑工程价款，已抵押担保的债权数额，以及其他法定优先受偿款。</p>
+            <p class="indent">3、本报告书提供的房地产价值是在本次估价目的满足估价对象全部假设限制条件下于价值时点${valueDateCn!}、土地权利性质为${landRightNature!}、用途为${registeredUse!}的房地产抵押价值。</p>
+        </div>
+
+        <div class="section content">
+            <h3>七、估价原则</h3>
+            <p class="indent">本估价报告在遵循客观、公正、科学、合理的基本原则下，结合估价目的对估价对象进行估价。具体依据如下估价原则：</p>
+            <p class="indent">1、合法原则。房地产价格是实物、区位、权益三者的有机结合，估价方和估价人员在估价中必须在房地产的产权、利用及处分方面符合相关法律法规的约定。</p>
+            <p class="indent">2、独立客观公正原则。房地产估价师站在中立的立场上，评估出对各方当事人来说均公平合理的价值。</p>
+            <p class="indent">3、最高最佳使用原则。最高最佳使用原则是指法律上允许、技术上可能、经济上可行，经过充分合理的论证，能使估价对象的价值达到最大的一种最可能的使用。</p>
+            <p class="indent">4、替代原则。类似房地产是指与估价对象处在同一供求范围内，其用途、规模、档次、建筑结构等方面与估价对象相同或相近的房地产。替代原则是市场比较法的理论基础。</p>
+            <p class="indent">5、价值时点原则。房地产估价结果应是估价对象在价值时点时的客观合理价格或价值。</p>
+            <p class="indent">6、谨慎原则。在进行抵押评估时，估价师应充分估计抵押对象在处置时可能受到的限制、未来可能发生的风险和损失，不高估市场价值，不低估知悉的法定优先受偿款。</p>
+            <h3>八、估价依据</h3>
+            <h4>（一）本次估价所依据的有关法律、法规和部门规章</h4>
+            <p class="indent">1.《中华人民共和国城市房地产管理法》；</p>
+            <p class="indent">2.《中华人民共和国土地管理法》；</p>
+            <p class="indent">3.《中华人民共和国民法典》；</p>
+            <p class="indent">4.《中华人民共和国资产评估法》；</p>
+            <p class="indent">5.《城市房地产抵押管理办法》。</p>
+            <h4>（二）本次估价采用的技术规程、标准、规范</h4>
+            <p class="indent">1.中华人民共和国国家标准《房地产估价规范》（GB/T 50291-2015）；</p>
+            <p class="indent">2.建设部、中国人民银行、中国银行业监督管理委员会联合颁布的《房地产抵押估价指导意见》；</p>
+            <p class="indent">3.中华人民共和国国家标准《城镇土地估价规程》（GB/T18508-2014）；</p>
+            <p class="indent">4.中华人民共和国国家标准《房地产估价基本术语标准》（GB/T 50899-2013）；</p>
+            <p class="indent">5.《商业银行房地产贷款风险管理指引》。</p>
+            <h4>（三）取价依据</h4>
+            <p class="indent">1.估价人员现场查勘收集、调查的有关资料；</p>
+            <p class="indent">2.估价人员搜集的近期房地产交易市场资料。</p>
+            <h4>（四）估价委托人提供的资料</h4>
+            <p class="indent">1.估价委托合同；</p>
+            <p class="indent">2.估价委托人提供的估价对象房屋《房屋所有权证书》、《国有土地使用权证》等资料；</p>
+            <p class="indent">3.估价委托人提供的其他相关资料。</p>
+            <h3>九、估价方法</h3>
+            <h4>1.估价方法的选用要求</h4>
+            <p class="indent">适合市场价值评估的常见方法有比较法、收益法、成本法、假设开发法。每种估价方法都有其适用的估价对象和估价需要具备的条件。</p>
+            <p class="indent">（1）估价对象的同类房地产有较多交易的，应选用比较法；</p>
+            <p class="indent">（2）估价对象或同类房地产有租金等经济收入的，应选用收益法；</p>
+            <p class="indent">（3）估价对象可假定为独立的开发项目进行重新开发建设，宜选用成本法；</p>
+            <p class="indent">（4）估价对象具有开发或再开发潜力且开发完成后的价值可采用除成本法以外的方法测算的，应选用假设开发法。</p>
+            <h4>2.估价方法的确定</h4>
+            <p class="indent">估价对象为${actualUse!'住宅'}房地产，目前区域内同类的房地产市场交易较活跃，交易实例易获取，应选用比较法进行评估。</p>
+            <p class="indent">${incomeApproachReason!'根据评估对象的利用类型、评估基准日与所在区域房地产市场情况，考虑到评估对象实际用途为住宅房产，周边租赁市场较不活跃，未来预期收益和风险不可以被预测并衡量，房产获利年限不可以被预测，故不选用收益法对评估对象进行评估。'}</p>
+            <p class="indent">${costApproachReason!'估价对象为住宅房地产，成本法所需的土地取得成本、建筑物建造成本等数据较难取得，且估价对象区域内多以住宅为主，与估价对象的形态较为匹配，目前使用状况良好，无需重新开发或再开发，故不宜采用成本法及假设开发法进行评估。'}</p>
+            <h4>3.估价方法简介及技术路线</h4>
+            <p class="indent">比较法是选取一定数量的可比实例，根据其间的差异对可比实例成交价格进行处理后得到估价对象价值或价格的方法。</p>
+            <p class="formula">比较价值 = 可比实例成交价格 × 交易情况修正系数 × 市场状况调整系数 × 房地产状况调整系数</p>
+            <p class="indent">具体步骤如下：①搜集交易实例；②选取可比实例；③建立比较基础；④进行交易情况修正；⑤进行市场状况调整；⑥进行房地产状况调整；⑦求出比较价值。</p>
+            <h3>十、估价结果</h3>
+            <p class="indent">本公司专业估价人员根据《房地产估价规范》规定的科学的估价方法进行了专业分析、测算和判断，对估价对象于价值时点的市场价格（或价值）进行了评估，并根据估价委托人要求，评估结果不考虑抵押、担保等他项权利，为估价对象于价值时点完全产权房地产市场价格。其评估结果如下：</p>
+            <p class="indent">据估价人员调查和测算，截止价值时点（${valueDate!}）的抵押价值为人民币${referenceTotalPrice!}万元，大写人民币${capitalamount!}。</p>
+            <h3>十一、注册房地产估价师</h3>
+            <table class="narrow">
+                <thead>
+                <tr><th>姓名</th><th>注册号</th><th>签名</th><th>签名日期</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>${valuer1Name!}</td><td>${valuer1CertNo!}</td><td></td><td>${issueDate!}</td></tr>
+                <tr><td>${valuer2Name!}</td><td>${valuer2CertNo!}</td><td></td><td>${issueDate!}</td></tr>
+                </tbody>
+            </table>
+            <h3>十二、实地查勘期</h3>
+            <p class="indent">${siteInspectionDateCn!}</p>
+            <h3>十三、估价作业日期</h3>
+            <p class="indent">${workStartDateCn!}至${workEndDateCn!}</p>
+            <h3>十四、抵押风险分析及报告使用提示</h3>
+            <p class="indent">1、估价对象的抵押价值未来下跌风险分析。建议估价委托人或者相关权利人密切关注估价对象抵押价值在未来年内下跌的风险，目前预期可能导致房地产抵押价值下跌的因素主要包括房地产使用和维护情况、区位因素改变、房地产市场供求变化、房地产政策影响等。</p>
+            <p class="indent">（1）估价对象状况和房地产市场状况因时间变化对房地产抵押价值可能产生影响，估价委托人和报告使用者须密切注意估价对象自身状况变化情况和所在房地产市场变化情况；</p>
+            <p class="indent">（2）有关部门制定的各项房地产调控政策、房地产开发企业及关联企业的财务风险、法律风险等，可能导致房地产信贷风险；</p>
+            <p class="indent">（3）所评估的价值是估价对象在价值时点的抵押价值，是为确定房地产抵押贷款额度而提供的参考依据；</p>
+            <p class="indent">（4）建议估价委托人和报告使用者定期或者在房地产市场价格变化较快时对房地产抵押价值进行再评估。</p>
+            <p class="indent">2、估价对象可能因区域规划、功能定位、市政建设、交通条件、生态环境、使用状况等因素变化导致抵押价值减损。</p>
+            <p class="indent">3、估价对象可能因房地产市场变化、国家宏观政策和经济形势变化、房地产相关税费和银行利率调整等因素导致估价对象的抵押价值减损。</p>
+            <p class="indent">4、着重关注处置房地产时快速变现、费用和心理等因素对估价对象抵押价值的影响。</p>
+            <p class="indent">5、注意自估价报告出具之后至抵押登记期间是否会出现法定优先受偿权。</p>
+            <p class="indent">6、本报告采用${valuationMethod!'比较法'}进行评估，其价值包含该宗地使用权、地上建筑物及相应的配套设施价值，相关使用方应合理使用本报告，并到相关有权管理部门办理抵押登记手续。</p>
+            <p class="indent">7、房地产抵押期间，抵押房地产仍由抵押方占有、使用。使用者应定期或在市场变化较快时对其进行再评估。</p>
+        </div>
+
+        <div class="section content">
+            <h3>十五、房地产评估结果摘要</h3>
+            <h2>房地产估价结果摘要</h2>
+            <p>估价项目名称：${projectName!}</p>
+            <p>估价委托方：${clientName!'北京银行股份有限公司杭州分行'}</p>
+            <p>估价报告编号：${reportNo!'XS0001'}</p>
+            <p>房地产估价机构：${valuationOrg!'浙江德衡房地产土地资产评估有限公司'}</p>
+            <p>估价报告出具日期：${issueDate!}</p>
+            <p>价值时点：${valueDate!}</p>
+            <p>评估报告有效期起始日：${validStartDate!}</p>
+            <p>评估报告有效期到期日：${validEndDate!}</p>
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th width="34">序号</th>
+                    <th>土地或房地产坐落</th>
+                    <th>不动产权证号</th>
+                    <th>权属人</th>
+                    <th>证载用途</th>
+                    <th>土地或房屋类型</th>
+                    <th>土地或建筑面积<br/>（㎡）</th>
+                    <th>估价单价<br/>（元/㎡）</th>
+                    <th>评估总价<br/>（元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>${propertyAddress!}</td>
+                    <td>${propertyCertificateNo!}</td>
+                    <td>${ownerName!}</td>
+                    <td>${actualUse!'住宅'}</td>
+                    <td>${rightNature!}</td>
+                    <td>${buildingArea!}</td>
+                    <td>${referenceUnitPrice!}</td>
+                    <td>${referenceTotalPriceYuan!}</td>
+                </tr>
+                <tr>
+                    <td colspan="6">合计</td>
+                    <td>${buildingArea!}</td>
+                    <td>-</td>
+                    <td>${referenceTotalPriceYuan!}</td>
+                </tr>
+                </tbody>
+            </table>
+            <p>评估合计总价：${referenceTotalPriceYuan!}元</p>
+            <div class="signature">
+                <p>${valuationOrg!'浙江德衡房地产土地资产评估有限公司'}</p>
+                <p>${issueDateCn!}</p>
+            </div>
+        </div>
+
+        <div class="section content">
+            <h2>第四部分 房地产变现能力分析</h2>
+            <p class="indent">房地产变现能力是指假定在价值时点实现抵押权时，在没有过多损失的条件下，将抵押房地产转换为现金的可能性。</p>
+            <p class="indent">抵押房地产的变现能力主要取决于以下两方面：①抵押房地产的实物形态及其体现的市场流动性，包括通用性、独立使用性、可分割转让性、体量或价值量、地段和开发程度等；②当地类似房地产的市场状况，包括市场发育程度和市场景气程度等。</p>
+            <h3>1、估价对象的通用性分析</h3>
+            <p class="indent">${marketabilityGeneralUse!'本次估价对象为住宅房地产，通用性较好。'}</p>
+            <h3>2、估价对象的独立使用性分析</h3>
+            <p class="indent">${marketabilityIndependentUse!'本次估价对象的产权状况明晰，利用现状符合法定用途及规划限制条件，目前尚无影响其独立使用的因素存在，故其独立使用性较强。'}</p>
+            <h3>3、估价对象的可分割转让性分析</h3>
+            <p class="indent">${marketabilityDivisibility!'本次估价对象为单一产权，只适宜整体使用及转让，不可分割转让。'}</p>
+            <h3>4、其他变现能力影响因素分析</h3>
+            <p class="indent">${marketabilityOtherFactors!'估价对象体量及价值量较大，故其市场流动性一般，所处区域较好，交通运输较便利，基础设施条件较好，目前整体维护保养状况较好；当地房地产市场发育成熟，交易方便；于价值时点，当地同类房地产买卖交易活跃程度较好，市场景气程度较好。'}</p>
+            <p class="indent">综合上述分析及判断，假定估价对象于价值时点实现抵押权时，其变现能力${marketabilityConclusion!'较好'}。</p>
+            <h3>5、快速变现价值分析</h3>
+            <p class="indent">${quickSaleValueAnalysis!'若需对估价对象在价值时点进行短期强制处分，考虑快速变现会受到该类房地产市场需求程度、拍卖市场交易活跃程度、快速变现付款方式、处置时间较一般正常交易时间短而导致交易双方无合理谈判时间、拍卖过户等变现费用以及其他不可预见因素的影响，其成交价格将会有一定价值减损。根据估价对象具体情况，预计其可能实现的变现价值仅为其公开市场价值的50～60％左右。'}</p>
+            <h3>6、快速变现时间分析</h3>
+            <p class="indent">${quickSaleTimeAnalysis!'变现时间的长短与变现能力大小正相关。根据当前处置同类房地产的变现情况，若估价对象于价值时点进行拍卖或变卖，其正常合理变现时间为12～24个月。'}</p>
+            <h3>7、快速变现交易费用及交易税费分析</h3>
+            <p class="indent">${quickSaleCostAnalysis!'估价对象若于价值时点进行拍卖，其变现过程中发生的费用、税费，一般包括拍卖公告费、拍卖佣金、诉讼律师费、增值税及附加、土地增值税、所得税、契税、印花税和交易手续费等。具体数额视估价对象具体情况，主要由拍卖公司、律师事务所、税务部门和房地产管理部门确定。'}</p>
+            <h3>8、处置变现后的债务清偿顺序</h3>
+            <p class="indent">抵押房地产拍卖变现后所得价款除了法律规定先于本次抵押贷款受偿的款额外，一般应按下列顺序进行清偿：①支付拍卖公告费和拍卖佣金；②缴纳增值税及附加、土地增值税、所得税、契税和交易手续费；③偿还抵押债权本息及违约金；④赔偿由债务人违反合同而对抵押权人造成的损失；⑤剩余金额最后留给抵押人。</p>
+        </div>
+
+        <div class="section content">
+            <h2>第五部分 附 件</h2>
+            <p>附件1&nbsp;&nbsp;估价对象位置图</p>
+            <p>附件2&nbsp;&nbsp;估价对象照片</p>
+            <p>附件3&nbsp;&nbsp;估价委托人提供的权属证书等复印件</p>
+            <p>附件4&nbsp;&nbsp;房地产估价机构营业执照复印件</p>
+            <p>附件5&nbsp;&nbsp;房地产估价机构备案证书复印件</p>
+            <p>附件6&nbsp;&nbsp;房地产估价师注册证书复印件</p>
+
+            <div class="section keep-together">
+                <h2>估价对象位置图</h2>
+                <img class="appendix-image" src="${locationMap!}" style="width:500px;height:500px;object-fit:contain;" alt="估价对象位置图"/>
+            </div>
+            <div class="section keep-together">
+                <h2>估价对象照片</h2>
+                ${propertyPhotoHtml!}
+            </div>
+            <div class="section keep-together">
+                <h2>权属证书等复印件</h2>
+                ${certificateAttachmentHtml!}
+            </div>
+            <div class="section keep-together">
+                <h2>房地产估价机构营业执照复印件</h2>
+                <img class="appendix-image" src="${businessLicenseImage!}" style="width:600px;height:800px;object-fit:contain;" alt="房地产估价机构营业执照复印件"/>
+            </div>
+            <div class="section keep-together">
+                <h2>房地产估价机构备案证书复印件</h2>
+                <img class="appendix-image" src="${recordCertificateImage!}" style="width:600px;height:800px;object-fit:contain;" alt="房地产估价机构备案证书复印件"/>
+            </div>
+            <div class="section keep-together">
+                <h2>房地产估价师注册证书复印件</h2>
+                ${valuerCertificateHtml!}
+            </div>
+        </div>
+
+        <div class="section content">
+            <h2>第六部分 房地产估价技术报告</h2>
+            <h3>一、估价对象描述与分析</h3>
+            <h4>1.估价对象实物状况描述与分析</h4>
+            <p class="indent">估价对象为${ownerName!}所有位于${propertyAddress!}的房地产，房屋建筑面积为${buildingArea!}㎡，土地使用权面积为${landUseRightArea!}㎡，估价范围包含房屋建筑物及其所占用的国有土地使用权、室内不可移动的房屋装饰装修及房地产相关的房屋配套设施设备，不包含室内动产、债权债务、特许经营权等其他财产。详见下表：</p>
+            <table class="narrow">
+                <tbody>
+                <tr class="table-title"><td colspan="4">押品概况表</td></tr>
+                <tr><th width="18%">资产类型</th><td width="27%">${assetType!'房地产类（居住用房）'}</td><th width="20%">房屋所有权证书号</th><td>${propertyCertificateNo!}</td></tr>
+                <tr><th>权利人</th><td>${ownerName!}</td><th>坐落</th><td>${propertyAddress!}</td></tr>
+                <tr><th>用途</th><td>${registeredUse!}</td><th>实际用途</th><td>${actualUse!'住宅'}</td></tr>
+                <tr><th>建筑面积（㎡）</th><td>${buildingArea!}</td><th>土地使用权面积（㎡）</th><td>${landUseRightArea!}</td></tr>
+                <tr><th>权利性质</th><td>${rightNature!}</td><th>土地终止日期</th><td>${landEndDate!}</td></tr>
+                <tr><th>装修情况</th><td>${decoration!}</td><th>房屋结构</th><td>${buildingStructure!}</td></tr>
+                <tr><th>楼层</th><td>${floorName!}/${totalFloor!}</td><th>共有情况</th><td>${coOwnership!}</td></tr>
+                </tbody>
+            </table>
+            <p class="indent">①建筑规模：${propertyAddress!}，房屋建筑面积为${buildingArea!}㎡，土地使用权面积为${landUseRightArea!}㎡，估价对象房屋总楼层为${totalFloor!}层，所在层为第${floorName!}层。目前为${occupancyStatus!'自住'}。</p>
+            <p class="indent">②建成年代：估价对象约建成于${builtYear!}年。</p>
+            <p class="indent">③建筑结构：${buildingStructure!}结构。</p>
+            <p class="indent">④建筑用途：${actualUse!'住宅'}用途。</p>
+            <p class="indent">⑤设施设备：${facilitiesCondition!'估价对象设备齐全，总体维护较好。'}</p>
+            <p class="indent">⑥空间布局：${spaceLayout!'阳台、厨房、卧室、卫生间。'}</p>
+            <p class="indent">⑦装饰装修：${decorationDescription!'建筑物为现代风格，外观一般。至价值时点，估价对象整体装修良好，房屋通风、采光较好。'}</p>
+            <p class="indent">⑧室内层高：${indoorHeight!'标准层高'}。</p>
+            <p class="indent">⑨朝向：${orientation!}朝向。</p>
+            <p class="indent">⑩维护养护情况及完损程度：${maintenanceCondition!'建筑物结构构件较好，装修和设备较好、齐全完整，管道畅通，地面、墙面、门窗保养维护正常。房屋属于完好房。'}</p>
+            <p class="indent">综上，估价对象建筑物实物状况较好，有利于估价对象的保值增值。</p>
+            <p class="indent">（2）土地实物状况描述与分析</p>
+            <p class="indent">①土地使用权面积：土地使用权面积为${landUseRightArea!}平方米。</p>
+            <p class="indent">②所在宗地形状：${parcelShape!'形状较规则，便于建筑物布置。'}</p>
+            <p class="indent">③地形、地貌：${terrain!'地势平坦，无明显的坡度。'}</p>
+            <p class="indent">④地势：${landLevel!'该宗地与相邻土地、道路基本齐平。'}</p>
+            <p class="indent">⑤土壤：${soilCondition!'该宗地为城镇住宅用地，没有迹象表明土壤受过影响。'}</p>
+            <p class="indent">⑥土地开发程度：${landDevelopmentLevel!'到价值时点，该宗地红线外基础设施达到“六通”（即通路、供电、供水、排水、通讯、通气）。'}</p>
+            <p class="indent">⑦景观：${landscape!'建筑物间距适中，景观质量较好。'}</p>
+            <p class="indent">⑧周边环境：${surroundingEnvironment!}</p>
+            <p class="indent">综上，估价对象土地实物状况较好，有利于估价对象的保值增值。</p>
+            <h4>2.估价对象权益状况描述与分析</h4>
+            <p class="indent">（1）建筑物权益状况描述与分析</p>
+            <p class="indent">估价对象房屋所有权人为${ownerName!}，已取得《房屋所有权证书》、证号为${propertyCertificateNo!}，证载房屋用途为${actualUse!'住宅'}，房屋建筑面积为${buildingArea!}㎡。至价值时点，估价对象为${coOwnership!}，${otherRightsBrief!'未设定他项权利，现为自住，无出租或占用情况，无其他特殊情况。'}</p>
+            <p class="indent">在价值时点，估价对象房屋产权明晰、无争议，能最大限度发挥其自身功用，对体现房产价值有积极的作用。</p>
+            <p class="indent">（2）土地权益状况描述与分析</p>
+            <p class="indent">估价对象宗地的土地所有权属国家所有，土地使用权人为${landUseRightOwner!}，《国有土地使用权证》证号为${landCertificateNo!}，证载土地使用权面积为${landUseRightArea!}㎡，使用权类型为${landRightNature!}，用途为${registeredUse!}，土地终止日期${landEndDate!}。至价值时点，尚剩余土地使用年限为${remainingLandYears!}年，宗地现状用途为${actualUse!'住宅'}，未设立他项权利，无土地使用管制及其他特殊情况。</p>
+            <p class="indent">在价值时点，估价对象土地使用权产权明晰、四至界限清晰、无争议，能最大限度发挥其自身功用，对体现土地使用权价值有积极的作用。</p>
+            <h4>3.估价对象区位状况描述与分析</h4>
+            <p class="indent">（1）位置状况：估价对象坐落于${propertyAddress!}，${locationDescription!'区位优势明显。'}</p>
+            <p class="indent">（2）交通状况：${trafficDescription!}</p>
+            <p class="indent">（3）环境状况：${environmentDescription!'估价对象所在区域自然环境和人文环境均较好，周边居住氛围较浓厚，周边商业氛围较好。'}</p>
+            <p class="indent">（4）外部配套设施：${publicFacilitiesDescription!}</p>
+            <p class="indent">综上，估价对象区位状况较好，有利于估价对象的保值增值。</p>
+        </div>
+
+        <div class="section content">
+            <h3>二、市场背景分析</h3>
+            <h4>（一）土地市场分析</h4>
+            <p class="indent">${landMarketAnalysis!'2025年以来，杭州土地市场成交方面，核心区商住用地竞争热度较高，远郊区域市场分化明显。'}</p>
+            <h4>（二）房地产市场分析</h4>
+            <p class="indent">${realEstateMarketAnalysis!'杭州住宅房地产市场呈现核心抗跌、外围调整的特征，二手房刚需房源主导，部分板块挂牌价持续回调；新房市场结构性分化，核心区高端盘价格相对坚挺，外围区域去化压力显现。'}</p>
+            <h4>（三）总结与展望</h4>
+            <p class="indent">${marketOutlook!'后续杭州住宅房地产市场预计延续结构性分化，核心区域抗跌性较强，外围区域仍需关注库存及去化压力；商办市场核心区有望稳中提升，新兴板块空置率可能继续攀升。'}</p>
+            ${marketBackgroundHtml!}
+            <h3>三、估价对象最高最佳利用分析</h3>
+            <p class="indent">最高最佳使用是指法律上允许、技术上可能、经济上可行，经充分合理论证，能使估价对象产生最高价值的使用。房地产估价应当以估价对象的最高最佳使用为前提进行估价。</p>
+            <p class="indent">根据估价对象所在区域的房地产市场状况，以及本市土地利用总体规划的要求，同时结合估价对象区域因素和个别因素状况，按照最高最佳使用原则，分析认定本报告中估价对象作为${actualUse!'住宅'}用途房地产使用为最高最佳使用。</p>
+            <p class="indent">最高最佳使用分析主要从法律上允许、技术上可行、经济上可行、土地与建筑物的均衡性、房地产与周围环境的协调性、可持续发展性等方面考虑。</p>
+            <p class="indent">根据估价对象所在区域的房地产市场状况，以及土地利用总体规划的要求，同时结合估价对象权属状况、地理位置、周边自然与人文经济环境及利用土地资源等具体情况，以估价对象目前状况继续使用为前提，认定本报告中估价对象作为${actualUse!'住宅'}用途房地产使用为最高最佳使用。</p>
+            <h3>四、估价方法适用性分析</h3>
+            <p class="indent">适合市场价值评估的常见方法有比较法、收益法、成本法、假设开发法。根据估价对象用途、规模、实物状况、市场交易活跃程度及资料可取得性，本次估价采用${valuationMethod!'比较法'}进行评估。</p>
+            <p class="formula">比较价值 = 可比实例价格 × 交易情况修正系数 × 市场状况调整系数 × 房地产状况调整系数</p>
+            <p class="indent">将上述求取的估价对象假定未设立法定优先受偿权下的价值减去房地产估价师知悉的法定优先受偿款，得出估价对象房地产抵押价值。</p>
+
+            <h3>五、估价测算过程</h3>
+            <h4>（一）比较法测算估价对象住宅在未设立法定优先受偿权下的价值</h4>
+            <p class="indent">比较法的基本原理是，根据替代原则，选取一定数量的可比实例，并将它们与估价对象进行比较，然后对这些可比实例的成交价格进行适当的处理来求取估价对象价值的方法。</p>
+            <p class="indent">本次估价是以估价对象状况为基准的直接比较修正，采用单价调整，选用百分比修正、调整下的乘法公式：</p>
+            <p class="formula">比较价值 = 可比实例价格 × 交易情况修正系数 × 市场状况调整系数 × 房地产状况调整系数</p>
+            <h4>3、选取可比实例</h4>
+            <p class="indent">根据替代原则，估价人员调查了与估价对象在地理位置、结构类型、使用功能、交易日期等因素相同或具有较强相关性的可比实例。</p>
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th>可比实例</th>
+                    <th>物业名称</th>
+                    <th>坐落</th>
+                    <th>类型</th>
+                    <th>建筑面积（㎡）</th>
+                    <th>装修</th>
+                    <th>楼层</th>
+                    <th>成交价格（元/㎡）</th>
+                    <th>交易日期</th>
+                </tr>
+                </thead>
+                <tbody>
+                ${comparableCaseRows!}
+                </tbody>
+            </table>
+            <h4>4、比较因素条件说明</h4>
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th>比较因素</th>
+                    <th>估价对象</th>
+                    <th>可比实例A</th>
+                    <th>可比实例B</th>
+                    <th>可比实例C</th>
+                </tr>
+                </thead>
+                <tbody>
+                ${comparisonConditionRows!}
+                </tbody>
+            </table>
+            <h4>5、确定比较因素条件指数</h4>
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th>比较因素</th>
+                    <th>估价对象</th>
+                    <th>可比实例A</th>
+                    <th>可比实例B</th>
+                    <th>可比实例C</th>
+                </tr>
+                </thead>
+                <tbody>
+                ${comparisonIndexRows!}
+                </tbody>
+            </table>
+            <h4>6、确定比较因素调整系数和比较价值</h4>
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th>比较因素</th>
+                    <th>比较实例A</th>
+                    <th>比较实例B</th>
+                    <th>比较实例C</th>
+                </tr>
+                </thead>
+                <tbody>
+                ${comparisonAdjustmentRows!}
+                <tr>
+                    <th>综合修正系数</th>
+                    <td>${adjustmentCoefficientA!}</td>
+                    <td>${adjustmentCoefficientB!}</td>
+                    <td>${adjustmentCoefficientC!}</td>
+                </tr>
+                <tr>
+                    <th>比较价值（元/㎡）</th>
+                    <td>${comparisonValueA!}</td>
+                    <td>${comparisonValueB!}</td>
+                    <td>${comparisonValueC!}</td>
+                </tr>
+                <tr>
+                    <th>权重</th>
+                    <td>${weightA!'1/3'}</td>
+                    <td>${weightB!'1/3'}</td>
+                    <td>${weightC!'1/3'}</td>
+                </tr>
+                <tr>
+                    <th>评估单价（元/㎡）</th>
+                    <td colspan="3">${referenceUnitPrice!}</td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="indent">经评估测算，确定估价对象${actualUse!'住宅'}房地产比较法单价为人民币${referenceUnitPrice!}元/平方米。</p>
+        </div>
+
+        <div class="section content">
+            <h3>六、估价结果确定</h3>
+            <p class="indent">本报告估价结果确定过程如下：</p>
+            <p class="indent">1、确定估价对象在未设立法定优先受偿权下的价值</p>
+            <p class="formula">估价对象总价值 = ${referenceUnitPrice!}元/㎡ × ${buildingArea!}㎡ = ${estimatedTotalValueYuan!}元（取整为${referenceTotalPrice!}万元）</p>
+            <p class="indent">2、房地产估价师知悉的法定优先受偿款</p>
+            <p class="indent">${priorityCompensationDescription!'应委托方要求，本次估价不考虑估价对象他项权利，为完全权利状况下的市场价值，故本次估价法定优先受偿款款项为0元。'}</p>
+            <p class="indent">3、抵押价值的确定</p>
+            <p class="formula">房地产抵押价值 = 未设立法定优先受偿权利下的市场价值 - 法定优先受偿款 = ${referenceTotalPrice!} - ${priorityCompensationAmount!'0'} = ${mortgageValue!}（万元）</p>
+            <p class="indent">即估价对象抵押总价：￥${mortgageValue!}（万元）</p>
+            <p class="indent">（大写：人民币${capitalamount!}）</p>
+            <h4>4、估价结果</h4>
+            <p class="indent">据估价人员调查和测算，截止价值时点（${valueDate!}）的抵押价值为人民币${referenceTotalPrice!}万元，大写人民币${capitalamount!}。</p>
+            <table class="narrow">
+                <thead>
+                <tr>
+                    <th>坐落</th>
+                    <th width="80">用途</th>
+                    <th width="88">建筑面积<br/>（㎡）</th>
+                    <th width="88">单价<br/>（元/㎡）</th>
+                    <th width="88">总价<br/>（万元）</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>${propertyAddress!}</td>
+                    <td>${actualUse!'住宅'}</td>
+                    <td>${buildingArea!}</td>
+                    <td>${referenceUnitPrice!}</td>
+                    <td>${referenceTotalPrice!}</td>
+                </tr>
+                <tr>
+                    <td>合计</td>
+                    <td>-</td>
+                    <td>${buildingArea!}</td>
+                    <td>-</td>
+                    <td>${referenceTotalPrice!}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="signature">
+                <p>${valuationOrg!'浙江德衡房地产土地资产评估有限公司'}</p>
+                <p>${issueDateCn!}</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
