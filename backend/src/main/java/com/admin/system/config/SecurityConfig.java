@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/image/thumbnail").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/", "/index.html", "/assets/**", "/*.js", "/*.css", "/*.ico", "/*.png", "/*.svg").permitAll()
-                        .requestMatchers("/bank/**","/order/**","/app/**", "/dashboard/**", "/system/**", "/project/**", "/report/**", "/seal/**", "/survey/**", "/file/**", "/notification/**", "/schedule/**").permitAll()
+                        .requestMatchers("/assistant/**", "/bank/**","/order/**","/app/**", "/dashboard/**", "/system/**", "/project/**", "/report/**", "/seal/**", "/survey/**", "/file/**", "/notification/**", "/schedule/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

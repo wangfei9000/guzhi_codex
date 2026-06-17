@@ -36,5 +36,10 @@ app:
 
   base-url: http://localhost:8080
 
+  ollama:
+    base-url: http://127.0.0.1:11434
+    model: llama3.2
+    timeout: 120s
+
   file:
     upload-dir: ./uploads

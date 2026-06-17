@@ -10,6 +10,7 @@ import type { RoleInfo, PermissionInfo } from '@/api/types';
 import PageContainer from '@/components/common/PageContainer';
 
 type StatusType = 'loading' | 'error' | 'empty' | 'success';
+type PermissionSelectValue = number | string | { value?: number | string };
 
 export default function RoleListPage() {
   const [status, setStatus] = useState<StatusType>('loading');
@@ -48,16 +49,17 @@ export default function RoleListPage() {
       roleName: role.roleName,
       roleCode: role.roleCode,
       description: role.description,
-      permissionIds: role.permissions?.map((p) => p.id),
+      permissionIds: toDisplayPermissionIds(role.permissions?.map((p) => p.id) || [], permissions),
     });
     setModalOpen(true);
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
+    const selectedPermissionIds = normalizePermissionIds(values.permissionIds || []);
     const submitValues = {
       ...values,
-      permissionIds: includeParentPermissionIds(values.permissionIds || [], permissions),
+      permissionIds: includeParentPermissionIds(selectedPermissionIds, permissions),
     };
     setSubmitting(true);
     try {
@@ -109,6 +111,39 @@ export default function RoleListPage() {
 
     walk(perms, []);
     return Array.from(result);
+  };
+
+  const toDisplayPermissionIds = (grantedIds: number[], perms: PermissionInfo[]) => {
+    const grantedSet = new Set(grantedIds);
+    const displaySet = new Set(grantedIds);
+
+    const hasGrantedDescendant = (node: PermissionInfo): boolean => {
+      return !!node.children?.some((child) => grantedSet.has(child.id) || hasGrantedDescendant(child));
+    };
+
+    const walk = (nodes: PermissionInfo[]) => {
+      nodes.forEach((node) => {
+        if (grantedSet.has(node.id) && hasGrantedDescendant(node)) {
+          displaySet.delete(node.id);
+        }
+        if (node.children?.length) {
+          walk(node.children);
+        }
+      });
+    };
+
+    walk(perms);
+    return Array.from(displaySet);
+  };
+
+  const normalizePermissionIds = (value: PermissionSelectValue[]) => {
+    return value
+      .map((item) => {
+        const rawValue = typeof item === 'object' && item !== null ? item.value : item;
+        const id = Number(rawValue);
+        return Number.isFinite(id) ? id : null;
+      })
+      .filter((id): id is number => id !== null);
   };
 
   const columns = [

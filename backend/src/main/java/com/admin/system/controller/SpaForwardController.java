@@ -20,6 +20,7 @@ public class SpaForwardController {
             "/report/**",
             "/seal/**",
             "/bank/**",
+            "/assistant/**",
             "/order/**",
             "/survey/**"
     })

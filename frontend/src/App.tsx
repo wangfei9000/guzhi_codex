@@ -27,6 +27,7 @@ import BankValuationDetailPage from '@/pages/bank/BankValuationDetailPage';
 import RevaluationPage from '@/pages/bank/RevaluationPage';
 import RevaluationListPage from '@/pages/bank/RevaluationListPage';
 import ReconciliationPage from '@/pages/bank/ReconciliationPage';
+import MyAssistantPage from '@/pages/assistant/MyAssistantPage';
 import SurveyMobilePage from '@/pages/app/SurveyMobilePage';
 import ForbiddenPage from '@/pages/error/ForbiddenPage';
 
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
       { path: 'bank/revaluation', element: <RevaluationPage /> },
       { path: 'bank/revaluation-list', element: <RevaluationListPage /> },
       { path: 'bank/reconciliation', element: <ReconciliationPage /> },
+      { path: 'assistant', element: <MyAssistantPage /> },
     ],
   },
   {

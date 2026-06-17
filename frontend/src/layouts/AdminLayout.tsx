@@ -24,6 +24,7 @@ import {
   RedoOutlined,
   FileExcelOutlined,
   AuditOutlined,
+  MessageOutlined,
 } from '@ant-design/icons';
 import { useAuthStore } from '@/store/authStore';
 import { useNotificationStore } from '@/store/notificationStore';
@@ -62,6 +63,7 @@ const allMenuItems: any[] = [
       { key: '/bank/reconciliation', icon: <AuditOutlined />, label: '对账', requiredPermission: 'bank:reconciliation' },
     ],
   },
+  { key: '/assistant', icon: <MessageOutlined />, label: '我的助理', requiredPermission: 'assistant:use' },
   {
     key: '/system',
     icon: <SettingOutlined />,
