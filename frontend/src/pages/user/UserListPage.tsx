@@ -144,6 +144,7 @@ export default function UserListPage() {
       title: '操作',
       key: 'action',
       width: 220,
+      fixed: 'right' as const,
       render: (_: unknown, record: UserInfo) => (
         <Space>
           <Button type="link" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)}>
@@ -195,6 +196,7 @@ export default function UserListPage() {
               rowKey="id"
               columns={columns}
               dataSource={users}
+              scroll={{ x: 1400 }}
               pagination={{
                 current: page,
                 total,
