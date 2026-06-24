@@ -7,6 +7,7 @@ import com.admin.system.entity.SysNotification;
 import com.admin.system.entity.SysUser;
 import com.admin.system.repository.SysUserRepository;
 import com.admin.system.service.NotificationService;
+import com.admin.system.websocket.WebSocketNotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final SysUserRepository userRepository;
+    private final WebSocketNotificationService webSocketNotificationService;
 
     private Long resolveUserId(Principal principal) {
         if (principal == null) return 1L;
@@ -71,6 +73,7 @@ public class NotificationController {
                 request.getTitle(),
                 request.getContent()
         );
+        webSocketNotificationService.sendNotification(request.getRecipientId(), notification);
         return ApiResponse.success("发送成功", notification);
     }
 }

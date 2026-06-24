@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface SysUserRepository extends JpaRepository<SysUser, Long> {
     Optional<SysUser> findByUsername(String username);
     boolean existsByUsername(String username);
+    List<SysUser> findByStatusOrderByUsernameAsc(Integer status);
 
     @Query("SELECT DISTINCT u FROM SysUser u " +
            "JOIN u.roles r " +

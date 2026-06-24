@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -16,13 +17,14 @@ public class WebSocketNotificationService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public void sendNotification(Long userId, SysNotification notification) {
-        Map<String, Object> payload = Map.of(
-                "id", notification.getId(),
-                "title", notification.getTitle(),
-                "content", notification.getContent(),
-                "isRead", notification.getIsRead(),
-                "createdAt", notification.getCreatedAt().toString()
-        );
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("id", notification.getId());
+        payload.put("userId", notification.getUserId());
+        payload.put("senderId", notification.getSenderId());
+        payload.put("title", notification.getTitle());
+        payload.put("content", notification.getContent());
+        payload.put("isRead", notification.getIsRead());
+        payload.put("createdAt", notification.getCreatedAt().toString());
 
         messagingTemplate.convertAndSendToUser(
                 String.valueOf(userId),

@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import { useNotificationStore } from '@/store/notificationStore';
+import { useChatStore } from '@/store/chatStore';
 import { useAuthStore } from '@/store/authStore';
 import { AUTH_TOKEN_KEY } from '@/utils/constants';
-import type { NotificationItem } from '@/api/types';
+import type { ChatMessage, ChatPresenceEvent, NotificationItem } from '@/api/types';
 
 export function useWebSocket() {
   const clientRef = useRef<Client | null>(null);
   const token = useAuthStore((s) => s.token);
   const addNotification = useNotificationStore((s) => s.addNotification);
+  const addChatMessage = useChatStore((s) => s.addChatMessage);
+  const setPresence = useChatStore((s) => s.setPresence);
 
   useEffect(() => {
     if (!token) return;
@@ -54,6 +57,23 @@ export function useWebSocket() {
           }
         } catch { /* ignore */ }
       });
+
+      client.subscribe('/user/queue/chat/message', (message) => {
+        try {
+          addChatMessage(JSON.parse(message.body) as ChatMessage);
+        } catch {
+          console.warn('Failed to parse chat WebSocket message');
+        }
+      });
+
+      client.subscribe('/topic/chat/presence', (message) => {
+        try {
+          const data = JSON.parse(message.body) as ChatPresenceEvent;
+          setPresence(data.userId, data.online);
+        } catch {
+          console.warn('Failed to parse chat presence message');
+        }
+      });
     };
 
     client.activate();
@@ -62,5 +82,5 @@ export function useWebSocket() {
     return () => {
       client.deactivate();
     };
-  }, [token, addNotification]);
+  }, [token, addNotification, addChatMessage, setPresence]);
 }

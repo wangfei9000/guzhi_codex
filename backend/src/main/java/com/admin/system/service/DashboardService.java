@@ -1,6 +1,7 @@
 package com.admin.system.service;
 
 import com.admin.system.dto.DashboardStatsDto;
+import com.admin.system.common.ChatConstants;
 import com.admin.system.repository.FileRecordRepository;
 import com.admin.system.repository.ProjectRepository;
 import com.admin.system.repository.SysNotificationRepository;
@@ -21,7 +22,7 @@ public class DashboardService {
         long userCount = userRepository.count();
         long projectCount = projectRepository.count();
         long fileCount = fileRecordRepository.count();
-        long unreadCount = notificationRepository.countByUserIdAndIsReadFalse(userId);
+        long unreadCount = notificationRepository.countByUserIdAndTitleNotAndIsReadFalse(userId, ChatConstants.CHAT_TITLE);
         return new DashboardStatsDto(userCount, projectCount, fileCount, unreadCount);
     }
 }

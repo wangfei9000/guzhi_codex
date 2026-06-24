@@ -75,6 +75,31 @@ export interface NotificationItem {
   createdAt: string;
 }
 
+export interface ChatUser {
+  id: number;
+  username: string;
+  nickname: string | null;
+  online: boolean;
+  unreadCount: number;
+  lastMessage: string | null;
+  lastSenderId: number | null;
+  lastMessageTime: string | null;
+}
+
+export interface ChatMessage {
+  id: number;
+  senderId: number;
+  recipientId: number;
+  content: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export interface ChatPresenceEvent {
+  userId: number;
+  online: boolean;
+}
+
 export interface ScheduleRecord {
   id: number;
   registrationDate: string;

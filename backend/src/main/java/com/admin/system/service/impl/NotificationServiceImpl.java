@@ -1,5 +1,6 @@
 package com.admin.system.service.impl;
 
+import com.admin.system.common.ChatConstants;
 import com.admin.system.entity.SysNotification;
 import com.admin.system.exception.BusinessException;
 import com.admin.system.repository.SysNotificationRepository;
@@ -18,12 +19,12 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Page<SysNotification> getUserNotifications(Long userId, Pageable pageable) {
-        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
+        return notificationRepository.findByUserIdAndTitleNotOrderByCreatedAtDesc(userId, ChatConstants.CHAT_TITLE, pageable);
     }
 
     @Override
     public long getUnreadCount(Long userId) {
-        return notificationRepository.countByUserIdAndIsReadFalse(userId);
+        return notificationRepository.countByUserIdAndTitleNotAndIsReadFalse(userId, ChatConstants.CHAT_TITLE);
     }
 
     @Override
@@ -41,7 +42,11 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void markAllAsRead(Long userId) {
-        Page<SysNotification> unread = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId, Pageable.unpaged());
+        Page<SysNotification> unread = notificationRepository.findByUserIdAndTitleNotOrderByCreatedAtDesc(
+                userId,
+                ChatConstants.CHAT_TITLE,
+                Pageable.unpaged()
+        );
         unread.forEach(n -> n.setIsRead(true));
         notificationRepository.saveAll(unread.getContent());
     }

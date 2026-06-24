@@ -11,6 +11,7 @@ import RoleListPage from '@/pages/role/RoleListPage';
 import PermissionPage from '@/pages/role/PermissionPage';
 import FileUploadPage from '@/pages/file/FileUploadPage';
 import NotificationPage from '@/pages/NotificationPage';
+import ChatPage from '@/pages/chat/ChatPage';
 import ScheduleListPage from '@/pages/schedule/ScheduleListPage';
 import ProjectListPage from '@/pages/project/ProjectListPage';
 import ProjectCreatePage from '@/pages/project/ProjectCreatePage';
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       { path: 'system/permission', element: <PermissionPage /> },
       { path: 'file/manage', element: <FileUploadPage /> },
       { path: 'notification', element: <NotificationPage /> },
+      { path: 'chat', element: <ChatPage /> },
       { path: 'schedule/list', element: <ScheduleListPage /> },
       { path: 'project/list', element: <ProjectListPage /> },
       { path: 'project/create', element: <ProjectCreatePage /> },

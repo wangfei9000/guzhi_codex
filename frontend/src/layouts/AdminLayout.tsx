@@ -79,6 +79,7 @@ const allMenuItems: any[] = [
   },
 
   { key: '/file/manage', icon: <FileOutlined />, label: '文件管理', requiredPermission: 'file:manage' },
+  { key: '/chat', icon: <MessageOutlined />, label: '即时聊天' },
   { key: '/notification', icon: <BellOutlined />, label: '通知中心', requiredPermission: 'notification:view' },
 ];
 
